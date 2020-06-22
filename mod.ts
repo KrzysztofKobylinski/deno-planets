@@ -1,6 +1,7 @@
 import { join } from "https://deno.land/std/path/mod.ts";
 import { BufReader } from "https://deno.land/std/io/bufio.ts";
 import { parse } from "https://deno.land/std/encoding/csv.ts";
+import * as _ from "https://raw.githubusercontent.com/lodash/lodash/4.17.15-es/lodash.js"
 
 interface Planet {
   [ key: string ]: string;
@@ -24,8 +25,18 @@ async function loadPlanetsData() {
     const similarStellarRadious = srad > 0.99 && srad < 1.01;
     return confirmedDisposition && similarRadious && similarMass && similarStellarRadious;
   })
-  return planets;
+  return planets.map((planet) => _.pick(planet, [
+    'koi_prad',
+    'koi_srad',
+    'koi_smass',
+    'kepler_name',
+    'koi_count',
+    'kot_steff',
+  ]));
 }
 
 const planets = await loadPlanetsData();
+for (const planet of planets) {
+  console.log(planet)
+}
 console.log(`${planets.length} - amount of planets`);
